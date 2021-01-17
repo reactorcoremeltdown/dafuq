@@ -34,7 +34,7 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
     if err != nil {
         log.Println("Cannot encode to JSON:" + err.Error())
     }
-    fmt.Fprint(res, configJson)
+    fmt.Fprint(res, string(configJson))
 }
 
 func main() {
