@@ -4,7 +4,9 @@ import (
     "fmt"
     "time"
     "os"
+    "os/exec"
     "io/ioutil"
+    "strconv"
     "log"
 
     "gopkg.in/ini.v1"
@@ -65,6 +67,18 @@ func main() {
             if (configArray[index].Counter == configArray[index].Interval) {
                 go func(name, command, argument, notifier string){
                     log.Println("Running check: " + name)
+                    var currentStatus int
+                    cmd := exec.Command("/bin/sh", "-c", command + " " + argument)
+                    if err := cmd.Run() ; err != nil {
+                        log.Println("Error: " + err.Error())
+                        if exitError, ok := err.(*exec.ExitError); ok {
+                            currentStatus = exitError.ExitCode()
+                        }
+                    } else {
+                        currentStatus = 0
+                    }
+                    log.Println("Command: " + command + " " + argument)
+                    log.Println("Status code: " + strconv.Itoa(currentStatus))
                 }(configArray[index].Name,
                     pluginsDir + "/" + configArray[index].Plugin,
                     configArray[index].Argument,
