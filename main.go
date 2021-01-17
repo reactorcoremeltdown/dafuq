@@ -68,7 +68,7 @@ func main() {
         for index, _ := range configArray {
             configArray[index].Counter = configArray[index].Counter + 1
             if (configArray[index].Counter == configArray[index].Interval) {
-                go func(name, command, argument, notifier string){
+                go func(name, command, argument, notifier string, i int){
                     log.Println("Running check: " + name)
                     cmd := exec.Command("/bin/sh", "-c", command + " " + argument)
                     var outputBuffer bytes.Buffer
@@ -78,36 +78,37 @@ func main() {
                                         "PLUGINSDIR=" + pluginsDir)
                     if err := cmd.Run() ; err != nil {
                         if exitError, ok := err.(*exec.ExitError); ok {
-                            configArray[index].CurrentStatus = exitError.ExitCode()
+                            configArray[i].CurrentStatus = exitError.ExitCode()
                         }
                     } else {
-                        configArray[index].CurrentStatus = 0
+                        configArray[i].CurrentStatus = 0
                     }
 
-                    if configArray[index].CurrentStatus != configArray[index].Status {
+                    if configArray[i].CurrentStatus != configArray[i].Status {
                         log.Println("Status of check " + 
-                                    configArray[index].Name + 
+                                    configArray[i].Name + 
                                     " changed from " + 
-                                    strconv.Itoa(configArray[index].Status) +
+                                    strconv.Itoa(configArray[i].Status) +
                                     " to " +
-                                    strconv.Itoa(configArray[index].CurrentStatus))
+                                    strconv.Itoa(configArray[i].CurrentStatus))
                         alert := exec.Command("/bin/sh", "-c", notifier)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
-                                            "NAME=" + configArray[index].Name,
-                                            "STATUS=" + strconv.Itoa(configArray[index].CurrentStatus),
-                                            "DESCRIPTION=" + configArray[index].Description,
+                                            "NAME=" + configArray[i].Name,
+                                            "STATUS=" + strconv.Itoa(configArray[i].CurrentStatus),
+                                            "DESCRIPTION=" + configArray[i].Description,
                                             "MESSAGE=" + outputBuffer.String())
                         err := alert.Run()
                         if err != nil {
                             log.Println("Unable to launch alert:" + err.Error())
                         }
                     }
-                    configArray[index].Status = configArray[index].CurrentStatus
+                    configArray[i].Status = configArray[i].CurrentStatus
                 }(configArray[index].Name,
                     pluginsDir + "/" + configArray[index].Plugin,
                     configArray[index].Argument,
-                    notifiersDir + "/" + configArray[index].Notify)
+                    notifiersDir + "/" + configArray[index].Notify,
+                    index)
                 configArray[index].Counter = 0
             }
         }
