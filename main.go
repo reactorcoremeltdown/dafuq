@@ -22,6 +22,7 @@ type config struct {
     Notify string
     Counter int
     Status int
+    CurrentStatus int
 }
 
 var configArray []config
@@ -59,6 +60,7 @@ func main() {
         container.Notify = configIni.Section("config").Key("notify").String()
         container.Counter = 0
         container.Status = 0
+        container.CurrentStatus = 0
 
         configArray = append(configArray, container)
     }
@@ -68,35 +70,36 @@ func main() {
             if (configArray[index].Counter == configArray[index].Interval) {
                 go func(name, command, argument, notifier string){
                     log.Println("Running check: " + name)
-                    var currentStatus int
                     cmd := exec.Command("/bin/sh", "-c", command + " " + argument)
                     var outputBuffer bytes.Buffer
                     cmd.Stdout = &outputBuffer
+                    cmd.Env = os.Environ()
+                    cmd.Env = append(cmd.Env,
+                                        "PLUGINSDIR=" + pluginsDir)
                     if err := cmd.Run() ; err != nil {
-                        log.Println("Error: " + err.Error())
                         if exitError, ok := err.(*exec.ExitError); ok {
-                            currentStatus = exitError.ExitCode()
+                            configArray[index].CurrentStatus = exitError.ExitCode()
                         }
                     } else {
-                        currentStatus = 0
+                        configArray[index].CurrentStatus = 0
                     }
 
-                    if currentStatus != configArray[index].Status {
+                    if configArray[index].CurrentStatus != configArray[index].Status {
                         alert := exec.Command("/bin/sh", "-c", notifier)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
                                             "NAME=" + configArray[index].Name,
-                                            "STATUS=" + strconv.Itoa(currentStatus),
+                                            "STATUS=" + strconv.Itoa(configArray[index].CurrentStatus),
                                             "DESCRIPTION=" + configArray[index].Description,
                                             "MESSAGE=" + outputBuffer.String())
                         err := alert.Run()
                         if err != nil {
                             log.Println("Unable to launch alert:" + err.Error())
                         }
-                        configArray[index].Status = currentStatus
+                        configArray[index].Status = configArray[index].CurrentStatus
                     }
                     log.Println("Command: " + command + " " + argument)
-                    log.Println("Status code: " + strconv.Itoa(currentStatus))
+                    log.Println("Status code: " + strconv.Itoa(configArray[index].CurrentStatus))
                 }(configArray[index].Name,
                     pluginsDir + "/" + configArray[index].Plugin,
                     configArray[index].Argument,
