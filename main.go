@@ -6,6 +6,8 @@ import (
     "os"
     "os/exec"
     "io/ioutil"
+    "net/http"
+    "encoding/json"
     "strconv"
     "bytes"
     "log"
@@ -27,6 +29,14 @@ type config struct {
 
 var configArray []config
 
+func encodeConfig(res http.ResponseWriter, req *http.Request) {
+    configJson, err := json.Marshal(configArray)
+    if err != nil {
+        log.Println("Cannot encode to JSON:" + err.Error())
+    }
+    fmt.Fprint(res, configJson)
+}
+
 func main() {
     cfg, err := ini.Load("/etc/monitoring/config.ini")
     if err != nil {
@@ -37,6 +47,8 @@ func main() {
     configsDir := cfg.Section("main").Key("configs").String()
     pluginsDir := cfg.Section("main").Key("plugins").String()
     notifiersDir := cfg.Section("main").Key("notifiers").String()
+    address := cfg.Section("main").Key("address").String()
+    port := cfg.Section("main").Key("port").String()
 
     configFiles, err := ioutil.ReadDir(configsDir + "/")
     if err != nil {
@@ -71,6 +83,10 @@ func main() {
 
         configArray = append(configArray, container)
     }
+    go func(){
+        http.HandleFunc("/", encodeConfig)
+        log.Println(http.ListenAndServe(address + ":" + port, nil))
+    }()
     for {
         for index, _ := range configArray {
             configArray[index].Counter = configArray[index].Counter + 1
