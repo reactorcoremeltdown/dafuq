@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /Users/rcmd/dev/spaces/personal/shovel/plugins/okfail
+source /root/shovel/plugins/okfail
 
 if [[ -f $1 ]]; then
 	ok "File $1 is in place." "$DESCRIPTION" "$ENVIRONMENT"
