@@ -59,11 +59,7 @@ func main() {
         container.Argument = configIni.Section("config").Key("argument").String()
         interval, _ := time.ParseDuration(configIni.Section("config").Key("interval").String())
         seconds := int(interval)
-        if seconds < 5 {
-            container.Interval = 5
-        } else {
-            container.Interval = seconds
-        }
+        container.Interval = seconds
         container.Notify = configIni.Section("config").Key("notify").String()
         container.Counter = 0
         container.Status = 0
