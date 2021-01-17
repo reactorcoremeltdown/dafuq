@@ -85,6 +85,12 @@ func main() {
                     }
 
                     if configArray[index].CurrentStatus != configArray[index].Status {
+                        log.Println("Status of check " + 
+                                    configArray[index].Name + 
+                                    " changed from " + 
+                                    configArray[index].Status +
+                                    " to " +
+                                    configArray[index].CurrentStatus)
                         alert := exec.Command("/bin/sh", "-c", notifier)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
@@ -98,8 +104,6 @@ func main() {
                         }
                     }
                     configArray[index].Status = configArray[index].CurrentStatus
-                    log.Println("Command: " + command + " " + argument)
-                    log.Println("Status code: " + strconv.Itoa(configArray[index].CurrentStatus))
                 }(configArray[index].Name,
                     pluginsDir + "/" + configArray[index].Plugin,
                     configArray[index].Argument,
