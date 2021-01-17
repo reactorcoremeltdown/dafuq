@@ -49,6 +49,8 @@ func main() {
         configIni, err := ini.Load(configsDir + "/" + configFile.Name())
         if err != nil {
             log.Println("Failed to parse config file: " + err.Error())
+        } else {
+            log.Println("Loaded config file: " + configsDir + "/" + configFile.Name())
         }
 
         container.Name = configIni.Section("config").Key("name").String()
