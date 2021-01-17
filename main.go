@@ -96,8 +96,8 @@ func main() {
                         if err != nil {
                             log.Println("Unable to launch alert:" + err.Error())
                         }
-                        configArray[index].Status = configArray[index].CurrentStatus
                     }
+                    configArray[index].Status = configArray[index].CurrentStatus
                     log.Println("Command: " + command + " " + argument)
                     log.Println("Status code: " + strconv.Itoa(configArray[index].CurrentStatus))
                 }(configArray[index].Name,
