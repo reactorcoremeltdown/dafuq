@@ -88,9 +88,9 @@ func main() {
                         log.Println("Status of check " + 
                                     configArray[index].Name + 
                                     " changed from " + 
-                                    configArray[index].Status +
+                                    strconv.Itoa(configArray[index].Status) +
                                     " to " +
-                                    configArray[index].CurrentStatus)
+                                    strconv.Itoa(configArray[index].CurrentStatus))
                         alert := exec.Command("/bin/sh", "-c", notifier)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
