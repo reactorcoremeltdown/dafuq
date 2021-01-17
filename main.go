@@ -7,6 +7,7 @@ import (
     "os/exec"
     "io/ioutil"
     "strconv"
+    "bytes"
     "log"
 
     "gopkg.in/ini.v1"
@@ -69,6 +70,8 @@ func main() {
                     log.Println("Running check: " + name)
                     var currentStatus int
                     cmd := exec.Command("/bin/sh", "-c", command + " " + argument)
+                    var outputBuffer bytes.Buffer
+                    cmd.Stdout = &outputBuffer
                     if err := cmd.Run() ; err != nil {
                         log.Println("Error: " + err.Error())
                         if exitError, ok := err.(*exec.ExitError); ok {
@@ -76,6 +79,21 @@ func main() {
                         }
                     } else {
                         currentStatus = 0
+                    }
+
+                    if currentStatus != configArray[index].Status {
+                        alert := exec.Command("/bin/sh", "-c", notifier)
+                        alert.Env = os.Environ()
+                        alert.Env = append(alert.Env,
+                                            "NAME=" + configArray[index].Name,
+                                            "STATUS=" + strconv.Itoa(currentStatus),
+                                            "DESCRIPTION=" + configArray[index].Description,
+                                            "MESSAGE=" + outputBuffer.String())
+                        err := alert.Run()
+                        if err != nil {
+                            log.Println("Unable to launch alert:" + err.Error())
+                        }
+                        configArray[index].Status = currentStatus
                     }
                     log.Println("Command: " + command + " " + argument)
                     log.Println("Status code: " + strconv.Itoa(currentStatus))
