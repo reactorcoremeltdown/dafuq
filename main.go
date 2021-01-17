@@ -75,9 +75,9 @@ func main() {
         for index, _ := range configArray {
             configArray[index].Counter = configArray[index].Counter + 1
             if (configArray[index].Counter == configArray[index].Interval) {
-                go func(name, command, argument, notifier string, i int){
-                    log.Println("Running check: " + name)
-                    cmd := exec.Command("/bin/sh", "-c", command + " " + argument)
+                go func(i int){
+                    log.Println("Running check: " + configArray[i].Name)
+                    cmd := exec.Command("/bin/sh", "-c", pluginsDir + "/" + configArray[i].Plugin + " " + configArray[i].Argument)
                     var outputBuffer bytes.Buffer
                     cmd.Stdout = &outputBuffer
                     cmd.Env = os.Environ()
@@ -98,7 +98,7 @@ func main() {
                                     strconv.Itoa(configArray[i].Status) +
                                     " to " +
                                     strconv.Itoa(configArray[i].CurrentStatus))
-                        alert := exec.Command("/bin/sh", "-c", notifier)
+                        alert := exec.Command("/bin/sh", "-c", notifiersDir + "/" + configArray[i].Notify)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
                                             "NAME=" + configArray[i].Name,
@@ -111,11 +111,7 @@ func main() {
                         }
                     }
                     configArray[i].Status = configArray[i].CurrentStatus
-                }(configArray[index].Name,
-                    pluginsDir + "/" + configArray[index].Plugin,
-                    configArray[index].Argument,
-                    notifiersDir + "/" + configArray[index].Notify,
-                    index)
+                }(index)
                 configArray[index].Counter = 0
             }
         }
