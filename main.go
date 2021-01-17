@@ -28,7 +28,7 @@ type config struct {
 var configArray []config
 
 func main() {
-    cfg, err := ini.Load("shovel.ini")
+    cfg, err := ini.Load("/etc/monitoring/config.ini")
     if err != nil {
         fmt.Printf("Failed to load config file: %v", err)
         os.Exit(1)
