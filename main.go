@@ -108,6 +108,7 @@ func main() {
                     } else {
                         configArray[i].CurrentStatus = 0
                     }
+                    configArray[i].Output = outputBuffer.String()
 
                     if configArray[i].CurrentStatus != configArray[i].Status {
                         log.Println("Status of check " + 
@@ -116,7 +117,6 @@ func main() {
                                     strconv.Itoa(configArray[i].Status) +
                                     " to " +
                                     strconv.Itoa(configArray[i].CurrentStatus))
-                        configArray[i].Output = outputBuffer.String()
                         alert := exec.Command("/bin/sh", "-c", notifiersDir + "/" + configArray[i].Notify)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
