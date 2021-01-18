@@ -22,6 +22,7 @@ type config struct {
     Interval int
     Description string
     Notify string
+    Output string
     Counter int
     Status int
     CurrentStatus int
@@ -77,6 +78,7 @@ func main() {
             container.Interval = seconds
         }
         container.Notify = configIni.Section("config").Key("notify").String()
+        container.Output = "Waiting for output"
         container.Counter = 0
         container.Status = 0
         container.CurrentStatus = 0
@@ -114,6 +116,7 @@ func main() {
                                     strconv.Itoa(configArray[i].Status) +
                                     " to " +
                                     strconv.Itoa(configArray[i].CurrentStatus))
+                        configArray[i].Output = outputBuffer.String()
                         alert := exec.Command("/bin/sh", "-c", notifiersDir + "/" + configArray[i].Notify)
                         alert.Env = os.Environ()
                         alert.Env = append(alert.Env,
