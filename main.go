@@ -30,12 +30,30 @@ type config struct {
 
 var configArray []config
 
+func logErr(desc string, e error) {
+    if e != nil {
+        log.Println(desc + ": " + e.Error())
+    }
+}
+
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
     configJson, err := json.Marshal(configArray)
-    if err != nil {
-        log.Println("Cannot encode to JSON:" + err.Error())
-    }
+    log.Err("Cannot encode to JSON", err)
     fmt.Fprint(res, string(configJson))
+}
+
+func writeStateFile(path string) (error) {
+    configJson, err := json.Marshal(configArray)
+    if err != nil {
+        return err
+    }
+    data := []byte(configJson)
+    err = ioutil.WriteFile(path, data, 0644)
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func main() {
@@ -55,6 +73,7 @@ func main() {
     configsDir := cfg.Section("main").Key("configs").String()
     pluginsDir := cfg.Section("main").Key("plugins").String()
     notifiersDir := cfg.Section("main").Key("notifiers").String()
+    stateFilePath := cfg.Section("main").Key("stateFile").String()
     address := cfg.Section("main").Key("address").String()
     port := cfg.Section("main").Key("port").String()
 
@@ -118,6 +137,8 @@ func main() {
                     configArray[i].Output = outputBuffer.String()
 
                     if configArray[i].CurrentStatus != configArray[i].Status {
+                        err := writeStateFile(stateFilePath)
+                        log.Err("Unable to write data to state file", err)
                         log.Println("Status of check " + 
                                     configArray[i].Name + 
                                     " changed from " + 
@@ -131,10 +152,8 @@ func main() {
                                             "STATUS=" + strconv.Itoa(configArray[i].CurrentStatus),
                                             "DESCRIPTION=" + configArray[i].Description,
                                             "MESSAGE=" + outputBuffer.String())
-                        err := alert.Run()
-                        if err != nil {
-                            log.Println("Unable to launch alert:" + err.Error())
-                        }
+                        err = alert.Run()
+                        log.Println("Unable to launch alert", err)
                     }
                     configArray[i].Status = configArray[i].CurrentStatus
                 }(index)
