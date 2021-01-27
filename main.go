@@ -56,6 +56,19 @@ func writeStateFile(path string) (error) {
     return nil
 }
 
+func loadState(saved, loaded []config) ([]config){
+    for index_loaded, key_loaded := range(loaded) {
+        for index_saved, key_saved := range(saved) {
+            if key_loaded.Name == key_saved.Name {
+                fmt.Println("Match!")
+            }
+        }
+    }
+
+    log.Println("Loading state completed")
+    return loaded
+}
+
 func main() {
     var configPath string
     configPathFromEnv, configPathFromEnvPresent := os.LookupEnv("CONFIG_PATH")
@@ -111,6 +124,15 @@ func main() {
 
         configArray = append(configArray, container)
     }
+
+    stateData, err := ioutil.ReadFile(stateFilePath)
+    logErr("Unable to load state file", err)
+
+    loadedState := make([]config,0)
+    err = json.Unmarshal(stateData, &loadedState)
+
+    loadState(loadedState, configArray)
+
     go func(){
         http.HandleFunc("/", encodeConfig)
         log.Println(http.ListenAndServe(address + ":" + port, nil))
