@@ -56,21 +56,20 @@ func writeStateFile(path string) (error) {
     return nil
 }
 
-func loadState(saved, loaded []config) ([]config){
-    for _, key_loaded := range(loaded) {
+func loadState(loaded []config) (){
+    for index, _ := range(configArray) {
         //fmt.Println("Loaded key: " + key_loaded.Name)
-        for _, key_saved := range(saved) {
+        for _, key_loaded := range(loaded) {
             //fmt.Println("Saved key: " + key_saved.Name)
-            if key_loaded.Name == key_saved.Name {
-                key_loaded.Counter = key_saved.Counter
-                key_loaded.Status = key_saved.Status
-                key_loaded.CurrentStatus = key_saved.CurrentStatus
+            if configArray[index].Name == key_loaded.Name {
+                configArray[index].Counter = key_loaded.Counter
+                configArray[index].Status = key_loaded.Status
+                configArray[index].CurrentStatus = key_loaded.CurrentStatus
             }
         }
     }
 
     log.Println("Loading state completed")
-    return loaded
 }
 
 func main() {
@@ -138,7 +137,7 @@ func main() {
         if err != nil {
             log.Println("Unable to decode JSON from state data: " + err.Error())
         } else {
-            configArray = loadState(loadedState, configArray)
+            loadState(loadedState)
         }
     }
 
