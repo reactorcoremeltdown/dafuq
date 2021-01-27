@@ -58,7 +58,9 @@ func writeStateFile(path string) (error) {
 
 func loadState(saved, loaded []config) ([]config){
     for _, key_loaded := range(loaded) {
+        fmt.Println("Loaded key: " + key_loaded.Name)
         for _, key_saved := range(saved) {
+            fmt.Println("Saved key: " + key_saved.Name)
             if key_loaded.Name == key_saved.Name {
                 fmt.Println("Match!")
             }
