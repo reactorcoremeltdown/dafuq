@@ -57,8 +57,8 @@ func writeStateFile(path string) (error) {
 }
 
 func loadState(saved, loaded []config) ([]config){
-    for index_loaded, key_loaded := range(loaded) {
-        for index_saved, key_saved := range(saved) {
+    for _, key_loaded := range(loaded) {
+        for _, key_saved := range(saved) {
             if key_loaded.Name == key_saved.Name {
                 fmt.Println("Match!")
             }
@@ -131,7 +131,7 @@ func main() {
     loadedState := make([]config,0)
     err = json.Unmarshal(stateData, &loadedState)
 
-    loadState(loadedState, configArray)
+    configArray = loadState(loadedState, configArray)
 
     go func(){
         http.HandleFunc("/", encodeConfig)
