@@ -59,11 +59,9 @@ func writeStateFile(path string) (error) {
 func main() {
     var configPath string
     configPathFromEnv, configPathFromEnvPresent := os.LookupEnv("CONFIG_PATH")
-    log.Println("Checking boolean status: " + strconv.FormatBool(configPathFromEnvPresent))
     if configPathFromEnvPresent {
         configPath = configPathFromEnv
     } else {
-        log.Println("Unable to load config file from Env path")
         configPath = "/etc/dafuq/config.ini"
     }
     cfg, err := ini.Load(configPath)
