@@ -39,7 +39,14 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-    cfg, err := ini.Load("/etc/monitoring/config.ini")
+    var configPath string
+    configPathFromEnv, configPathFromEnvPresent := os.LookupEnv("CONFIG_PATH")
+    if configPathFromEnvPresent {
+        configPath = configPathFromEnv
+    } else {
+        configPath = "/etc/dafuq/config.ini"
+    }
+    cfg, err := ini.Load(configPath)
     if err != nil {
         fmt.Printf("Failed to load config file: %v", err)
         os.Exit(1)
