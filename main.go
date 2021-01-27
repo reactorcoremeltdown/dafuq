@@ -125,13 +125,19 @@ func main() {
         configArray = append(configArray, container)
     }
 
-    stateData, err := ioutil.ReadFile(stateFilePath)
-    logErr("Unable to load state file", err)
-
     loadedState := make([]config,0)
-    err = json.Unmarshal(stateData, &loadedState)
+    stateData, err := ioutil.ReadFile(stateFilePath)
+    if err != nil {
+        log.Println("Unable to load state from file: " + err.Error())
+    } else {
+        err = json.Unmarshal(stateData, &loadedState)
+        if err != nil {
+            log.Println("Unable to decode JSON from state data: " + err.Error())
+        } else {
+            configArray = loadState(loadedState, configArray)
+        }
+    }
 
-    configArray = loadState(loadedState, configArray)
 
     go func(){
         http.HandleFunc("/", encodeConfig)
