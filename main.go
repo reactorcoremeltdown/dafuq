@@ -58,9 +58,7 @@ func writeStateFile(path string) (error) {
 
 func loadState(loaded []config) (){
     for index, _ := range(configArray) {
-        //fmt.Println("Loaded key: " + key_loaded.Name)
         for _, key_loaded := range(loaded) {
-            //fmt.Println("Saved key: " + key_saved.Name)
             if configArray[index].Name == key_loaded.Name {
                 configArray[index].Counter = key_loaded.Counter
                 configArray[index].Status = key_loaded.Status
