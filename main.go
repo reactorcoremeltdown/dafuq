@@ -62,6 +62,7 @@ func main() {
     if configPathFromEnvPresent {
         configPath = configPathFromEnv
     } else {
+        log.Println("Unable to load config file from Env path")
         configPath = "/etc/dafuq/config.ini"
     }
     cfg, err := ini.Load(configPath)
