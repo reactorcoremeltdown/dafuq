@@ -2,4 +2,4 @@ all: dafuq
 
 dafuq: Makefile Dockerfile main.go
 	docker build -t dafuq:latest .
-	install -d /opt/dafuq
+	docker run -v /opt/apps/dafuq:/opt/apps/dafuq dafuq:latest cp /opt/dafuq /opt/apps/dafuq/
