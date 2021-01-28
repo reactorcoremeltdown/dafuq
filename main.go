@@ -147,7 +147,7 @@ func main() {
         syscall.SIGTERM,
         syscall.SIGQUIT)
     go func() {
-        s := <-sigc
+        <-sigc
         err := writeStateFile(stateFilePath)
         logErr("Unable to write data to state file", err)
         os.Exit(0)
