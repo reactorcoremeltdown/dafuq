@@ -106,7 +106,7 @@ func main() {
             log.Println("Loaded config file: " + configsDir + "/" + configFile.Name())
         }
 
-        container.Name = configIni.Section("config").Key("name").String()
+ a       container.Name = configIni.Section("config").Key("name").String()
         container.Description = configIni.Section("config").Key("description").String()
         container.Plugin = configIni.Section("config").Key("plugin").String()
         container.Argument = configIni.Section("config").Key("argument").String()
@@ -139,6 +139,17 @@ func main() {
         }
     }
 
+    sigc := make(chan os.Signal, 1)
+    signal.Notify(sigc,
+        syscall.SIGINT,
+        syscall.SIGTERM,
+        syscall.SIGQUIT)
+    go func() {
+        s := <-sigc
+        err := writeStateFile(stateFilePath)
+        logErr("Unable to write data to state file", err)
+        os.Exit(0)
+    }()
 
     go func(){
         http.HandleFunc("/", encodeConfig)
