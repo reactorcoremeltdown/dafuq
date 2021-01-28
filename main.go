@@ -5,6 +5,8 @@ import (
     "time"
     "os"
     "os/exec"
+    "os/signal"
+    "syscall"
     "io/ioutil"
     "net/http"
     "encoding/json"
