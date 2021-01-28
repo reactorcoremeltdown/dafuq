@@ -65,6 +65,7 @@ func loadState(loaded []config) (){
                 configArray[index].Counter = key_loaded.Counter
                 configArray[index].Status = key_loaded.Status
                 configArray[index].CurrentStatus = key_loaded.CurrentStatus
+                configArray[index].Output = key_loaded.Output
             }
         }
     }
