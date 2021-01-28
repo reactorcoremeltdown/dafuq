@@ -106,7 +106,7 @@ func main() {
             log.Println("Loaded config file: " + configsDir + "/" + configFile.Name())
         }
 
- a       container.Name = configIni.Section("config").Key("name").String()
+        container.Name = configIni.Section("config").Key("name").String()
         container.Description = configIni.Section("config").Key("description").String()
         container.Plugin = configIni.Section("config").Key("plugin").String()
         container.Argument = configIni.Section("config").Key("argument").String()
