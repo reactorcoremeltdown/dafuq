@@ -6,13 +6,13 @@
 
 ### TABLE OF CONTENTS
 
-+ [Description]()
-+ [Motivation]()
-+ [So, how do I write a config?]()
-+ [And now, how do I launch it?]()
-+ [That looks great! But how do I check live status?]()
-+ [Building]()
-+ [Roadmap]()
++ [Description](#description)
++ [Motivation](#motivation)
++ [So, how do I write a config?](#so-how-do-i-write-a-config)
++ [And now, how do I launch it?](#and-now-how-do-i-launch-it)
++ [That looks great! But how do I check live status?](#that-looks-great-but-how-do-i-check-live-status)
++ [Building](#building)
++ [Roadmap](#roadmap)
 
 ### Description
 
