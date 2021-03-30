@@ -1,6 +1,7 @@
 all: dafuq artifacts
 
 dafuq: Makefile Dockerfile main.go
+	test -d /opt/apps/dafuq || mkdir -p /opt/apps/dafuq
 	podman build -t repo.rcmd.space/dafuq:latest .
 	podman push repo.rcmd.space/dafuq:latest
 	systemctl stop wtfd.service
