@@ -28,6 +28,9 @@ type config struct {
     Counter int
     Status int
     CurrentStatus int
+    WarningThreshold string
+    CriticalThreshold string
+    FlowOperator string
 }
 
 var configArray []config
@@ -120,6 +123,21 @@ func main() {
         } else {
             container.Interval = seconds
         }
+        if configIni.Section("config").Key("WarningThreshold").String() != "" {
+            container.WarningThreshold = config.Section("config").Key("WarningThreshold").String()
+        } else {
+            container.WarningThreshold = "0"
+        }
+        if configIni.Section("config").Key("CriticalThreshold").String() != "" {
+            container.CriticalThreshold = configIni.Section("config").Key("CriticalThreshold").String()
+        } else {
+            container.CriticalThreshold = "0"
+        }
+        if configIni.Section("config").Key("FlowOperator").String() != "" {
+            container.FlowOperator = configIni.Section("config").Key("FlowOperator").String()
+        } else {
+            container.FlowOperator = "upwards"
+        }
         container.Notify = configIni.Section("config").Key("notify").String()
         container.Output = "Waiting for output"
         container.Counter = 0
@@ -169,6 +187,9 @@ func main() {
                     cmd.Stdout = &outputBuffer
                     cmd.Env = os.Environ()
                     cmd.Env = append(cmd.Env,
+                                        "WARNING_THRESHOLD=" + configArray[i].WarningThreshold,
+                                        "CRITICAL_THRESHOLD=" + configArray[i].CriticalThreshold,
+                                        "FLOW_OPERATOR=" + configArray[i].FlowOperator,
                                         "PLUGINSDIR=" + pluginsDir)
                     if err := cmd.Run() ; err != nil {
                         if exitError, ok := err.(*exec.ExitError); ok {
