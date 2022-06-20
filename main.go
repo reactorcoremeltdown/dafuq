@@ -124,7 +124,7 @@ func main() {
             container.Interval = seconds
         }
         if configIni.Section("config").Key("WarningThreshold").String() != "" {
-            container.WarningThreshold = config.Section("config").Key("WarningThreshold").String()
+            container.WarningThreshold = configIni.Section("config").Key("WarningThreshold").String()
         } else {
             container.WarningThreshold = "0"
         }
