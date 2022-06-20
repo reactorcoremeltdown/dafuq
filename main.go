@@ -125,18 +125,18 @@ func main() {
         }
         // some debug logging
         log.Println("Loading config:" + configFile.Name() + "; Value: WarningThreshold = " + configIni.Section("config").Key("WarningThreshold").String())
-        if configIni.Section("config").Key("WarningThreshold").String() != "" {
-            container.WarningThreshold = configIni.Section("config").Key("WarningThreshold").String()
+        if configIni.Section("config").Key("warningThreshold").String() != "" {
+            container.WarningThreshold = configIni.Section("config").Key("warningThreshold").String()
         } else {
             container.WarningThreshold = "0"
         }
-        if configIni.Section("config").Key("CriticalThreshold").String() != "" {
-            container.CriticalThreshold = configIni.Section("config").Key("CriticalThreshold").String()
+        if configIni.Section("config").Key("criticalThreshold").String() != "" {
+            container.CriticalThreshold = configIni.Section("config").Key("criticalThreshold").String()
         } else {
             container.CriticalThreshold = "0"
         }
-        if configIni.Section("config").Key("FlowOperator").String() != "" {
-            container.FlowOperator = configIni.Section("config").Key("FlowOperator").String()
+        if configIni.Section("config").Key("flowOperator").String() != "" {
+            container.FlowOperator = configIni.Section("config").Key("flowOperator").String()
         } else {
             container.FlowOperator = "upwards"
         }
