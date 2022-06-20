@@ -123,6 +123,8 @@ func main() {
         } else {
             container.Interval = seconds
         }
+        // some debug logging
+        log.Println("Loading config:" + configFile.Name() + "; Value: WarningThreshold = " + configIni.Section("config").Key("WarningThreshold").String())
         if configIni.Section("config").Key("WarningThreshold").String() != "" {
             container.WarningThreshold = configIni.Section("config").Key("WarningThreshold").String()
         } else {
@@ -157,6 +159,7 @@ func main() {
             log.Println("Unable to decode JSON from state data: " + err.Error())
         } else {
             loadState(loadedState)
+            log.Println("Loaded state from " + stateFilePath)
         }
     }
 
