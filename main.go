@@ -123,8 +123,6 @@ func main() {
         } else {
             container.Interval = seconds
         }
-        // some debug logging
-        log.Println("Loading config:" + configFile.Name() + "; Value: WarningThreshold = " + configIni.Section("config").Key("WarningThreshold").String())
         if configIni.Section("config").Key("warningThreshold").String() != "" {
             container.WarningThreshold = configIni.Section("config").Key("warningThreshold").String()
         } else {
