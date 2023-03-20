@@ -4,7 +4,6 @@ dafuq: Makefile Dockerfile main.go
 	test -d /opt/apps/dafuq || mkdir -p /opt/apps/dafuq
 	podman build -t repo.rcmd.space/dafuq:latest .
 	podman push repo.rcmd.space/dafuq:latest
-	podman run -v /opt/apps/dafuq:/opt/apps/dafuq repo.rcmd.space/dafuq:latest cp /opt/dafuq /opt/apps/dafuq/
 
 artifacts: linux_amd64 linux_arm64 darwin_amd64 darwin_arm64
 
