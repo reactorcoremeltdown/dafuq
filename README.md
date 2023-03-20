@@ -1,6 +1,6 @@
 # DAFUQ
 
-![](https://ci.rcmd.space/badge/dafuq.svg)
+![Build Status](https://ci.rcmd.space/api/badges/rcmd/dafuq/status.svg)
 
 ...so, uhm, 'dafuq just happened?
 

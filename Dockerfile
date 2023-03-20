@@ -1,4 +1,4 @@
-FROM golang:buster
+FROM golang:latest
 
 COPY . /data
 ENV GOBIN=/usr/local/bin

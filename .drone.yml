@@ -1,0 +1,50 @@
+---
+kind: pipeline
+type: exec
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  disable: true
+
+steps:
+- name: clone
+  commands:
+  - git clone $DRONE_GIT_SSH_URL
+- name: build
+  commands:
+  - cd $DRONE_REPO_NAME && sudo make
+
+node:
+  machine: hangar.rcmd.space
+
+---
+kind: pipeline
+type: exec
+name: report
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  disable: true
+
+steps:
+- name: report
+  commands:
+  - /usr/local/bin/telegram.run
+
+trigger:
+  status:
+  - success
+  - failure
+
+node:
+  machine: hangar.rcmd.space
+
+depends_on:
+- default
