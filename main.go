@@ -23,7 +23,7 @@ type config struct {
 	Argument          string
 	Interval          int
 	Description       string
-	Notify            string
+	Notify            []string
 	Output            string
 	Counter           int
 	Status            int
@@ -105,7 +105,7 @@ func main() {
 
 	for _, configFile := range configFiles {
 		var container config
-		configIni, err := ini.Load(configsDir + "/" + configFile.Name())
+		configIni, err := ini.ShadowLoad(configsDir + "/" + configFile.Name())
 		if err != nil {
 			log.Println("Failed to parse config file: " + err.Error())
 		} else {
@@ -138,7 +138,7 @@ func main() {
 		} else {
 			container.FlowOperator = "upwards"
 		}
-		container.Notify = configIni.Section("config").Key("notify").String()
+		container.Notify = configIni.Section("config").Key("notify").ValueWithShadows()
 		container.Output = "Waiting for output"
 		container.Counter = 0
 		container.Status = 0
@@ -210,15 +210,19 @@ func main() {
 							strconv.Itoa(configArray[i].Status) +
 							" to " +
 							strconv.Itoa(configArray[i].CurrentStatus))
-						alert := exec.Command("/bin/sh", "-c", notifiersDir+"/"+configArray[i].Notify)
-						alert.Env = os.Environ()
-						alert.Env = append(alert.Env,
-							"NAME="+configArray[i].Name,
-							"STATUS="+strconv.Itoa(configArray[i].CurrentStatus),
-							"DESCRIPTION="+configArray[i].Description,
-							"MESSAGE="+outputBuffer.String())
-						err = alert.Run()
-						log.Println("Unable to launch alert", err)
+						for _, notifier := range configArray[i].Notify {
+							alert := exec.Command("/bin/sh", "-c", notifiersDir+"/"+notifier)
+							alert.Env = os.Environ()
+							alert.Env = append(alert.Env,
+								"NAME="+configArray[i].Name,
+								"STATUS="+strconv.Itoa(configArray[i].CurrentStatus),
+								"DESCRIPTION="+configArray[i].Description,
+								"MESSAGE="+outputBuffer.String())
+							err = alert.Run()
+							if err != nil {
+								log.Println("Unable to launch alert", err)
+							}
+						}
 					}
 					configArray[i].Status = configArray[i].CurrentStatus
 				}(index)
