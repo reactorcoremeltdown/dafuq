@@ -213,7 +213,7 @@ func main() {
 							" to " +
 							strconv.Itoa(configArray[i].CurrentStatus))
 						for _, item := range configArray[i].Notify {
-							ctx, cancel := context.WithTimeout(context.Background(), execTimeoutSec*time.Second)
+							ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
 							alert := exec.CommandContext(ctx, "/bin/sh", "-c", notifiersDir+"/"+item)
 							alert.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 							go func() {
