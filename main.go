@@ -185,7 +185,15 @@ func main() {
 			if configArray[index].Counter == configArray[index].Interval {
 				go func(i int) {
 					log.Println("Running check: " + configArray[i].Name)
-					cmd := exec.Command("/bin/sh", "-c", pluginsDir+"/"+configArray[i].Plugin+" "+configArray[i].Argument)
+					ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
+					cmd := exec.CommandContext(ctx, "/bin/sh", "-c", pluginsDir+"/"+configArray[i].Plugin+" "+configArray[i].Argument)
+					cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+					go func() {
+						<-ctx.Done()
+						if ctx.Err() == context.DeadlineExceeded {
+							syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+						}
+					}()
 					var outputBuffer bytes.Buffer
 					cmd.Stdout = &outputBuffer
 					cmd.Env = os.Environ()
@@ -200,6 +208,11 @@ func main() {
 						}
 					} else {
 						configArray[i].CurrentStatus = 0
+					}
+					cancel()
+
+					if ctx.Err() == context.DeadlineExceeded {
+						log.Println("Timeout running check " + pluginsDir + "/" + configArray[i].Plugin)
 					}
 					configArray[i].Output = outputBuffer.String()
 
