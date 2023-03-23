@@ -8,7 +8,9 @@ dafuq: Makefile Dockerfile main.go
 artifacts: linux_amd64 linux_arm64 linux_arm darwin_amd64 darwin_arm64
 
 linux_amd64:
+	systemctl stop wtfd
 	podman run --env=GOOS=linux --env=GOARCH=amd64 -v /opt/apps/dafuq:/opt/apps/dafuq repo.rcmd.space/dafuq:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-linux_amd64; cp /opt/dafuq-linux_amd64 /opt/apps/dafuq/'
+	systemctl start wtfd
 
 linux_arm64:
 	podman run --env=GOOS=linux --env=GOARCH=arm64 -v /opt/apps/dafuq:/opt/apps/dafuq repo.rcmd.space/dafuq:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-linux_arm64; cp /opt/dafuq-linux_arm64 /opt/apps/dafuq/'

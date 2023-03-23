@@ -210,8 +210,8 @@ func main() {
 							strconv.Itoa(configArray[i].Status) +
 							" to " +
 							strconv.Itoa(configArray[i].CurrentStatus))
-						for _, notifier := range configArray[i].Notify {
-							alert := exec.Command("/bin/sh", "-c", notifiersDir+"/"+notifier)
+						for _, item := range configArray[i].Notify {
+							alert := exec.Command("/bin/sh", "-c", notifiersDir+"/"+item)
 							alert.Env = os.Environ()
 							alert.Env = append(alert.Env,
 								"NAME="+configArray[i].Name,
@@ -220,6 +220,7 @@ func main() {
 								"MESSAGE="+outputBuffer.String())
 							err = alert.Run()
 							if err != nil {
+								log.Println("Command is: " + notifiersDir + "/" + item)
 								log.Println("Unable to launch alert", err)
 							}
 						}
