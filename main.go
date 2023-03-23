@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -94,6 +95,7 @@ func main() {
 	pluginsDir := cfg.Section("main").Key("plugins").String()
 	notifiersDir := cfg.Section("main").Key("notifiers").String()
 	stateFilePath := cfg.Section("main").Key("stateFile").String()
+	execTimeoutSec := cfg.Section("main").Key("execTimeoutSec").MustInt(10) // Defaulting to 10 seconds timeout for executing scripts
 	address := cfg.Section("main").Key("address").String()
 	port := cfg.Section("main").Key("port").String()
 
@@ -211,7 +213,15 @@ func main() {
 							" to " +
 							strconv.Itoa(configArray[i].CurrentStatus))
 						for _, item := range configArray[i].Notify {
-							alert := exec.Command("/bin/sh", "-c", notifiersDir+"/"+item)
+							ctx, cancel := context.WithTimeout(context.Background(), execTimeoutSec*time.Second)
+							alert := exec.CommandContext(ctx, "/bin/sh", "-c", notifiersDir+"/"+item)
+							alert.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+							go func() {
+								<-ctx.Done()
+								if ctx.Err() == context.DeadlineExceeded {
+									syscall.Kill(-alert.Process.Pid, syscall.SIGKILL)
+								}
+							}()
 							alert.Env = os.Environ()
 							alert.Env = append(alert.Env,
 								"NAME="+configArray[i].Name,
@@ -219,9 +229,13 @@ func main() {
 								"DESCRIPTION="+configArray[i].Description,
 								"MESSAGE="+outputBuffer.String())
 							err = alert.Run()
+							cancel()
 							if err != nil {
 								log.Println("Command is: " + notifiersDir + "/" + item)
 								log.Println("Unable to launch alert", err)
+							}
+							if ctx.Err() == context.DeadlineExceeded {
+								log.Println("Timeout running " + notifiersDir + "/" + item)
 							}
 						}
 					}
