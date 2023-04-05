@@ -3,6 +3,7 @@ all: dafuq
 dafuq: Makefile Dockerfile main.go
 	test -d /opt/apps/dafuq || mkdir -p /opt/apps/dafuq
 	test -d /var/cache/golang || mkdir -p /var/cache/golang
+	echo "Drone branch is $${DRONE_BRANCH}"
 	podman run --env=GOOS=linux \
 		--env=GOARCH=amd64 \
 		--env=GOPATH=/var/cache/golang \

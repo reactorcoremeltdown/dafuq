@@ -17,6 +17,8 @@ steps:
 - name: build
   commands:
   - cd $DRONE_REPO_NAME && sudo make
+  environment:
+    DRONE_BRANCH: $DRONE_BRANCH
 - name: release
   commands:
   - cd $DRONE_REPO_NAME && sudo make release
