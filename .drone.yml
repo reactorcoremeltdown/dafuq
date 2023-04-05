@@ -17,6 +17,12 @@ steps:
 - name: build
   commands:
   - cd $DRONE_REPO_NAME && sudo make
+- name: release
+  commands:
+  - sudo make release
+  when:
+    event:
+    - tag
 
 node:
   machine: hangar.rcmd.space
