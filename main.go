@@ -96,6 +96,7 @@ func main() {
 	notifiersDir := cfg.Section("main").Key("notifiers").String()
 	stateFilePath := cfg.Section("main").Key("stateFile").String()
 	execTimeoutSec := cfg.Section("main").Key("execTimeoutSec").MustInt(10) // Defaulting to 10 seconds timeout for executing scripts
+	jsonStatusPath := cfg.Section("main").Key("jsonStatusPath").MustString("/")
 	address := cfg.Section("main").Key("address").String()
 	port := cfg.Section("main").Key("port").String()
 
@@ -176,7 +177,7 @@ func main() {
 	}()
 
 	go func() {
-		http.HandleFunc("/", encodeConfig)
+		http.HandleFunc(jsonStatusPath, encodeConfig)
 		log.Println(http.ListenAndServe(address+":"+port, nil))
 	}()
 	for {
