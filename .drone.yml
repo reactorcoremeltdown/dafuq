@@ -19,7 +19,7 @@ steps:
   - cd $DRONE_REPO_NAME && sudo make
 - name: release
   commands:
-  - sudo make release
+  - cd $DRONE_REPO_NAME && sudo make release
   when:
     event:
     - tag
