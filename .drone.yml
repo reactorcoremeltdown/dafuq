@@ -20,6 +20,8 @@ steps:
 - name: release
   commands:
   - cd $DRONE_REPO_NAME && sudo make release
+  environment:
+    DRONE_TAG: $DRONE_TAG
   when:
     event:
     - tag
