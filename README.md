@@ -8,6 +8,7 @@
 
 + [Description](#description)
 + [Motivation](#motivation)
++ [Installation](#installation)
 + [So, how do I write a config?](#so-how-do-i-write-a-config)
 + [And now, how do I launch it?](#and-now-how-do-i-launch-it)
 + [That looks great! But how do I check live status?](#that-looks-great-but-how-do-i-check-live-status)
@@ -26,6 +27,10 @@ Yes, there are lots of similar projects, take various `nagios-core` implementati
 + Sometimes packages are getting expelled from official repositories of my favorite operating system
 
 The way I like it includes nothing else other than writing a small number of really simple configs, throwing a binary on a machine, then just launching it. Simplicity is what I aim for!
+
+### Installation
+
+Get the latest version of DAFUQ at https://repo.rcmd.space/binaries/dafuq/
 
 ### So, how do I write a config?
 
