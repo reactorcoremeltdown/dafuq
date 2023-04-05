@@ -1,3 +1,5 @@
+DRONE_TAG=$(shell git describe --tags --abbrev=0)
+
 all: dafuq
 
 dafuq: Makefile Dockerfile main.go
