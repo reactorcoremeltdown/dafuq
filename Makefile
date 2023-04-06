@@ -9,7 +9,7 @@ dafuq: Makefile Dockerfile main.go
 	podman run --env=GOOS=linux \
 		--env=GOARCH=amd64 \
 		--env=GOPATH=/var/cache/golang \
-		-v $(PWD):/app/dafuq \
+		-v $(shell pwd):/app/dafuq \
 		-v /var/cache/golang:/var/cache/golang \
 		-v /opt/apps/dafuq:/opt/apps/dafuq \
 		golang:latest sh -c 'unset GOBIN && cd /app/dafuq && go get && go build -o /opt/dafuq-linux_amd64; cp /opt/dafuq-linux_amd64 /opt/apps/dafuq/'
