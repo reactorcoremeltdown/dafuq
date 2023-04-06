@@ -96,6 +96,7 @@ func loadState(loaded []config) {
 }
 
 func main() {
+	log.Println(os.Environ())
 	var configPath string
 	configPathFromEnv, configPathFromEnvPresent := os.LookupEnv("CONFIG_PATH")
 	if configPathFromEnvPresent {
