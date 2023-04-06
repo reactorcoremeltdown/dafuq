@@ -32,6 +32,7 @@ type config struct {
 	WarningThreshold  string
 	CriticalThreshold string
 	FlowOperator      string
+	Hostname          string
 }
 
 var configArray []config
@@ -136,6 +137,7 @@ func main() {
 		container.Description = configIni.Section("config").Key("description").String()
 		container.Plugin = configIni.Section("config").Key("plugin").String()
 		container.Argument = configIni.Section("config").Key("argument").String()
+		container.Hostname = configIni.Section("config").Key("hostname").MustString(os.Getenv("HOSTNAME"))
 		interval, _ := time.ParseDuration(configIni.Section("config").Key("interval").String())
 		seconds := int(interval.Seconds())
 		if seconds < 5 {
@@ -219,7 +221,8 @@ func main() {
 						"WARNING_THRESHOLD="+configArray[i].WarningThreshold,
 						"CRITICAL_THRESHOLD="+configArray[i].CriticalThreshold,
 						"FLOW_OPERATOR="+configArray[i].FlowOperator,
-						"PLUGINSDIR="+pluginsDir)
+						"PLUGINSDIR="+pluginsDir,
+						"HOSTNAME="+configArray[i].Hostname)
 					if err := cmd.Run(); err != nil {
 						if exitError, ok := err.(*exec.ExitError); ok {
 							configArray[i].CurrentStatus = exitError.ExitCode()
