@@ -26,18 +26,20 @@ linux_arm64:
 	podman run --env=GOOS=linux \
 		--env=GOARCH=arm64 \
 		--env=GOPATH=/var/cache/golang \
+		-v $(shell pwd):/app/dafuq \
 		-v /var/cache/golang:/var/cache/golang \
 		-v /opt/apps/dafuq/releases/${DRONE_TAG}:/opt/apps/dafuq \
-		repo.rcmd.space/dafuq:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-linux_arm64; cp /opt/dafuq-linux_arm64 /opt/apps/dafuq/'
+		golang:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-linux_arm64; cp /opt/dafuq-linux_arm64 /opt/apps/dafuq/'
 
 linux_arm:
 	test -d /opt/apps/dafuq/releases/${DRONE_TAG} || mkdir -p /opt/apps/dafuq/releases/${DRONE_TAG}
 	podman run --env=GOOS=linux \
 		--env=GOARCH=arm \
 		--env=GOPATH=/var/cache/golang \
+		-v $(shell pwd):/app/dafuq \
 		-v /var/cache/golang:/var/cache/golang \
 		-v /opt/apps/dafuq/releases/${DRONE_TAG}:/opt/apps/dafuq \
-		repo.rcmd.space/dafuq:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-linux_arm; cp /opt/dafuq-linux_arm /opt/apps/dafuq/'
+		golang:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-linux_arm; cp /opt/dafuq-linux_arm /opt/apps/dafuq/'
 
 # darwin_amd64:
 # 	podman run --env=GOOS=darwin --env=GOARCH=amd64 -v /opt/apps/dafuq:/opt/apps/dafuq repo.rcmd.space/dafuq:latest sh -c 'unset GOBIN && go get && go build -o /opt/dafuq-darwin_amd64; cp /opt/dafuq-darwin_amd64 /opt/apps/dafuq/'

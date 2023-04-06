@@ -46,7 +46,6 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 	checkName := req.URL.Query().Get("check")
 	notFound := true
 	if checkName != "" {
-		log.Println("Check query param: " + checkName)
 		for _, check := range configArray {
 			if check.Name == checkName {
 				notFound = false
