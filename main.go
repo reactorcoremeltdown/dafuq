@@ -44,17 +44,21 @@ func logErr(desc string, e error) {
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
 	checkName := req.URL.Query().Get("check")
+	notFound := true
 	if checkName != "" {
 		log.Println("Check query param: " + checkName)
 		for _, check := range configArray {
 			if check.Name == checkName {
+				notFound = false
 				configJson, err := json.Marshal(check)
 				logErr("Cannot encode to JSON", err)
 				fmt.Fprint(res, string(configJson))
 			}
 		}
-		res.WriteHeader(404)
-		fmt.Fprint(res, "Check not found")
+		if notFound {
+			res.WriteHeader(404)
+			fmt.Fprint(res, "Check not found")
+		}
 	} else {
 		configJson, err := json.Marshal(configArray)
 		logErr("Cannot encode to JSON", err)
