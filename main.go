@@ -260,6 +260,7 @@ func main() {
 							alert.Env = append(alert.Env,
 								"NAME="+configArray[i].Name,
 								"STATUS="+strconv.Itoa(configArray[i].CurrentStatus),
+								"HOSTNAME="+configArray[i].Hostname,
 								"DESCRIPTION="+configArray[i].Description,
 								"MESSAGE="+outputBuffer.String())
 							err = alert.Run()
