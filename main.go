@@ -48,6 +48,7 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 
 	checkName := req.URL.Query().Get("check")
 	if checkName != "" {
+		log.Println("Check query param: " + checkName)
 		for _, check := range configArray {
 			if check.Name == checkName {
 				configJson, err = json.Marshal(check)
