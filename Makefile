@@ -12,7 +12,7 @@ dafuq: Makefile Dockerfile main.go
 		-v $(shell pwd):/app/dafuq \
 		-v /var/cache/golang:/var/cache/golang \
 		-v /opt/apps/dafuq:/opt/apps/dafuq \
-		golang:latest sh -c 'unset GOBIN && cd /app/dafuq && go get && go build -o /opt/dafuq-linux_amd64; cp /opt/dafuq-linux_amd64 /opt/apps/dafuq/'
+		golang:latest sh -c 'unset GOBIN && cd /app/dafuq && go get && go build -buildvcs=false -o /opt/dafuq-linux_amd64; cp /opt/dafuq-linux_amd64 /opt/apps/dafuq/'
 	systemctl start wtfd
 
 release: linux_amd64 linux_arm64 linux_arm
