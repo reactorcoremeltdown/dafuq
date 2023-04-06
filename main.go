@@ -44,6 +44,7 @@ func logErr(desc string, e error) {
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
 
+	log.Println("GET Params: " + req.URL.Query())
 	checkName := req.URL.Query().Get("check")
 	if checkName != "" {
 		log.Println("Check query param: " + checkName)
