@@ -222,6 +222,7 @@ func main() {
 						"WARNING_THRESHOLD="+configArray[i].WarningThreshold,
 						"CRITICAL_THRESHOLD="+configArray[i].CriticalThreshold,
 						"FLOW_OPERATOR="+configArray[i].FlowOperator,
+						"PLUGIN_NAME="+configArray[i].Name,
 						"PLUGINSDIR="+pluginsDir,
 						"HOSTNAME="+configArray[i].Hostname)
 					if err := cmd.Run(); err != nil {
