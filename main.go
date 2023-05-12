@@ -218,8 +218,9 @@ func main() {
 							syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 						}
 					}()
-					var outputBuffer bytes.Buffer
+					var outputBuffer, stderrBuffer bytes.Buffer
 					cmd.Stdout = &outputBuffer
+					cmd.Stderr = &stderrBuffer
 					cmd.Env = os.Environ()
 					cmd.Env = append(cmd.Env,
 						"WARNING_THRESHOLD="+configArray[i].WarningThreshold,
@@ -241,6 +242,10 @@ func main() {
 						log.Println("Timeout running check " + pluginsDir + "/" + configArray[i].Plugin)
 					}
 					configArray[i].Output = outputBuffer.String()
+
+					if stderrBuffer.String() != "" {
+						log.Println("Check " + configArray[i].Name + " errored: " + stderrBuffer.String())
+					}
 
 					if configArray[i].CurrentStatus != configArray[i].Status {
 						err := writeStateFile(stateFilePath)
