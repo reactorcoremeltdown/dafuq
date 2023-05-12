@@ -168,9 +168,9 @@ func main() {
 		container.CurrentStatus = 0
 
 		configArray = append(configArray, container)
-		container.WarningThreshold = nil
-		container.CriticalThreshold = nil
-		container.FlowOperator = nil
+		container.WarningThreshold = "0"
+		container.CriticalThreshold = "0"
+		container.FlowOperator = "upwards"
 	}
 
 	loadedState := make([]config, 0)
