@@ -36,7 +36,7 @@ type config struct {
 }
 
 var configArray []config
-var Version string
+var Version, CommitID, BuildDate string
 
 func logErr(desc string, e error) {
 	if e != nil {
@@ -45,7 +45,10 @@ func logErr(desc string, e error) {
 }
 
 func displayVersion(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(res, "Dafuq, "+Version)
+	fmt.Fprint(res, "Dafuq, version: "+
+		Version+
+		", build date: "+BuildDate+
+		", commit ID: "+CommitID)
 }
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
