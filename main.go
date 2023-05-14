@@ -48,7 +48,7 @@ func displayVersion(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(res, "Dafuq, version: "+
 		Version+
 		", build date: "+BuildDate+
-		", commit ID: "+CommitID)
+		", commit ID: "+CommitID+"\n")
 }
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
