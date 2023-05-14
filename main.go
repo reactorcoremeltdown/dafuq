@@ -45,7 +45,7 @@ func logErr(desc string, e error) {
 }
 
 func displayVersion(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(res, "Dafuq, version "+Version)
+	fmt.Fprint(res, "Dafuq, "+Version)
 }
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
