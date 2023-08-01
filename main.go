@@ -36,11 +36,19 @@ type config struct {
 }
 
 var configArray []config
+var Version, CommitID, BuildDate string
 
 func logErr(desc string, e error) {
 	if e != nil {
 		log.Println(desc + ": " + e.Error())
 	}
+}
+
+func displayVersion(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprint(res, "Dafuq, version: "+
+		Version+
+		", build date: "+BuildDate+
+		", commit ID: "+CommitID+"\n")
 }
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
@@ -200,6 +208,7 @@ func main() {
 	}()
 
 	go func() {
+		http.HandleFunc("/version", displayVersion)
 		http.HandleFunc(jsonStatusPath, encodeConfig)
 		log.Println(http.ListenAndServe(address+":"+port, nil))
 	}()
