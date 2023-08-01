@@ -33,7 +33,7 @@ steps:
     - tag
 
 node:
-  machine: hangar.rcmd.space
+  machine: garage
 
 ---
 kind: pipeline
@@ -58,7 +58,7 @@ trigger:
   - failure
 
 node:
-  machine: hangar.rcmd.space
+  machine: garage
 
 depends_on:
 - default
