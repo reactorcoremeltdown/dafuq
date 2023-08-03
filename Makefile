@@ -22,7 +22,13 @@ release: linux_amd64 linux_arm64 linux_arm
 
 linux_amd64:
 	test -d /opt/apps/dafuq/releases/${DRONE_TAG} || mkdir -p /opt/apps/dafuq/releases/${DRONE_TAG}
-	cp /opt/apps/dafuq/dafuq-linux_amd64 /opt/apps/dafuq/releases/${DRONE_TAG}
+	podman run --env=GOOS=linux \
+		--env=GOARCH=amd64 \
+		--env=GOPATH=/var/cache/golang \
+		-v $(shell pwd):/app/dafuq \
+		-v /var/cache/golang:/var/cache/golang \
+		-v /opt/apps/dafuq/releases/${DRONE_TAG}:/opt/apps/dafuq \
+		golang:latest sh -c "unset GOBIN && cd /app/dafuq && go get && go build -ldflags='-X main.Version=${DRONE_TAG} -X main.CommitID=${DRONE_COMMIT_ID} -X main.BuildDate=${DRONE_BUILD_DATE}' -buildvcs=false -o /opt/dafuq-linux_amd64; cp /opt/dafuq-linux_amd64 /opt/apps/dafuq/"
 
 linux_arm64:
 	test -d /opt/apps/dafuq/releases/${DRONE_TAG} || mkdir -p /opt/apps/dafuq/releases/${DRONE_TAG}
