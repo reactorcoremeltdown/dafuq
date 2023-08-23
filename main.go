@@ -53,19 +53,44 @@ func displayVersion(res http.ResponseWriter, req *http.Request) {
 
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
 	checkName := req.URL.Query().Get("check")
+	counter := req.URL.Query().Get("counter")
 	notFound := true
 	if checkName != "" {
-		for _, check := range configArray {
-			if check.Name == checkName {
-				notFound = false
-				configJson, err := json.Marshal(check)
-				logErr("Cannot encode to JSON", err)
-				fmt.Fprint(res, string(configJson))
+		if req.Method == http.MethodPost {
+			if counter != "" {
+				counterValue, err := strconv.Atoi(counter)
+				if err != nil {
+					res.WriteHeader(400)
+					fmt.Fprint(res, "Invalid integer value")
+				} else {
+					for index, check := range configArray {
+						if check.Name == checkName {
+							configArray[index].Counter = counterValue
+							fmt.Fprint(res, "OK")
+						}
+					}
+					if notFound {
+						res.WriteHeader(404)
+						fmt.Fprint(res, "Check not found")
+					}
+				}
+			} else {
+				res.WriteHeader(400)
+				fmt.Fprint(res, "POST requests are only for setting check counters")
 			}
-		}
-		if notFound {
-			res.WriteHeader(404)
-			fmt.Fprint(res, "Check not found")
+		} else {
+			for _, check := range configArray {
+				if check.Name == checkName {
+					notFound = false
+					configJson, err := json.Marshal(check)
+					logErr("Cannot encode to JSON", err)
+					fmt.Fprint(res, string(configJson))
+				}
+			}
+			if notFound {
+				res.WriteHeader(404)
+				fmt.Fprint(res, "Check not found")
+			}
 		}
 	} else {
 		configJson, err := json.Marshal(configArray)
