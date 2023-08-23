@@ -241,7 +241,7 @@ func main() {
 	for {
 		for index, _ := range configArray {
 			configArray[index].Counter = configArray[index].Counter + 1
-			if configArray[index].Counter == configArray[index].Interval {
+			if configArray[index].Counter >= configArray[index].Interval {
 				go func(i int) {
 					log.Println("Running check: " + configArray[i].Name)
 					ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
