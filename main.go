@@ -61,22 +61,23 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 				counterValue, err := strconv.Atoi(counter)
 				if err != nil {
 					res.WriteHeader(400)
-					fmt.Fprint(res, "Invalid integer value")
+					fmt.Fprint(res, "Invalid integer value\n")
 				} else {
 					for index, check := range configArray {
 						if check.Name == checkName {
+							notFound = false
 							configArray[index].Counter = counterValue
-							fmt.Fprint(res, "OK")
+							fmt.Fprint(res, "OK\n")
 						}
 					}
 					if notFound {
 						res.WriteHeader(404)
-						fmt.Fprint(res, "Check not found")
+						fmt.Fprint(res, "Check not found\n")
 					}
 				}
 			} else {
 				res.WriteHeader(400)
-				fmt.Fprint(res, "POST requests are only for setting check counters")
+				fmt.Fprint(res, "POST requests are only for setting check counters\n")
 			}
 		} else {
 			for _, check := range configArray {
@@ -89,7 +90,7 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 			}
 			if notFound {
 				res.WriteHeader(404)
-				fmt.Fprint(res, "Check not found")
+				fmt.Fprint(res, "Check not found\n")
 			}
 		}
 	} else {
