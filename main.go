@@ -25,6 +25,7 @@ type config struct {
 	Interval          int
 	Description       string
 	Notify            []string
+	SuppressedBy      []string
 	Output            string
 	Counter           int
 	Status            int
@@ -216,6 +217,7 @@ func main() {
 			container.FlowOperator = "upwards"
 		}
 		container.Notify = configIni.Section("config").Key("notify").ValueWithShadows()
+		container.SuppressedBy = configIni.Section("config").Key("suppressedBy").ValueWithShadows()
 		container.Output = "Waiting for output"
 		container.Counter = 0
 		container.Status = 0
@@ -311,32 +313,44 @@ func main() {
 							strconv.Itoa(configArray[i].Status) +
 							" to " +
 							strconv.Itoa(configArray[i].CurrentStatus))
-						for _, item := range configArray[i].Notify {
-							ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
-							alert := exec.CommandContext(ctx, "/bin/sh", "-c", notifiersDir+"/"+item)
-							alert.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
-							go func() {
-								<-ctx.Done()
-								if ctx.Err() == context.DeadlineExceeded {
-									syscall.Kill(-alert.Process.Pid, syscall.SIGKILL)
+						suppressStatus := 0
+						for _, suppressor := range configArray[i].SuppressedBy {
+							s, err := getCheck(suppressor)
+							if err == nil {
+								suppressStatus = suppressStatus + s.Status
+							}
+						}
+
+						if suppressStatus == 0 {
+							for _, item := range configArray[i].Notify {
+								ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
+								alert := exec.CommandContext(ctx, "/bin/sh", "-c", notifiersDir+"/"+item)
+								alert.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+								go func() {
+									<-ctx.Done()
+									if ctx.Err() == context.DeadlineExceeded {
+										syscall.Kill(-alert.Process.Pid, syscall.SIGKILL)
+									}
+								}()
+								alert.Env = os.Environ()
+								alert.Env = append(alert.Env,
+									"NAME="+configArray[i].Name,
+									"STATUS="+strconv.Itoa(configArray[i].CurrentStatus),
+									"HOSTNAME="+configArray[i].Hostname,
+									"DESCRIPTION="+configArray[i].Description,
+									"MESSAGE="+outputBuffer.String())
+								err = alert.Run()
+								cancel()
+								if err != nil {
+									log.Println("Command is: " + notifiersDir + "/" + item)
+									log.Println("Unable to launch alert", err)
 								}
-							}()
-							alert.Env = os.Environ()
-							alert.Env = append(alert.Env,
-								"NAME="+configArray[i].Name,
-								"STATUS="+strconv.Itoa(configArray[i].CurrentStatus),
-								"HOSTNAME="+configArray[i].Hostname,
-								"DESCRIPTION="+configArray[i].Description,
-								"MESSAGE="+outputBuffer.String())
-							err = alert.Run()
-							cancel()
-							if err != nil {
-								log.Println("Command is: " + notifiersDir + "/" + item)
-								log.Println("Unable to launch alert", err)
+								if ctx.Err() == context.DeadlineExceeded {
+									log.Println("Timeout running " + notifiersDir + "/" + item)
+								}
 							}
-							if ctx.Err() == context.DeadlineExceeded {
-								log.Println("Timeout running " + notifiersDir + "/" + item)
-							}
+						} else {
+							log.Println("Check " + configArray[i].Name + " suppressed")
 						}
 					}
 					configArray[i].Status = configArray[i].CurrentStatus
