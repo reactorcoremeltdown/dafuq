@@ -1,0 +1,17 @@
+Source: dafuq
+Section: utils
+Priority: optional
+Maintainer: Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>
+Build-Depends: dh-golang,
+               golang-any,
+               golang-gopkg-ini.v1-dev,
+Standards-Version: 4.6.0
+Homepage: https://github.com/reactorcoremeltdown/dafuq
+Rules-Requires-Root: no
+
+Package: dafuq
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Built-Using: ${misc:Built-Using}
+Description: Drastically simple monitoring tool, a Nagios microkernel
