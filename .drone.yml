@@ -21,19 +21,9 @@ steps:
     DRONE_BRANCH: $DRONE_BRANCH
     GIT_SUDO:
       from_secret: git_sudo
-- name: release
-  commands:
-  - cd $DRONE_REPO_NAME && echo $GIT_SUDO | sudo -S make release
-  environment:
-    DRONE_TAG: $DRONE_TAG
-    GIT_SUDO:
-      from_secret: git_sudo
-  when:
-    event:
-    - tag
 
 node:
-  machine: garage
+  role: production
 
 ---
 kind: pipeline
@@ -58,7 +48,7 @@ trigger:
   - failure
 
 node:
-  machine: garage
+  role: production
 
 depends_on:
 - default
