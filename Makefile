@@ -4,9 +4,9 @@ DRONE_BUILD_DATE=$(shell date "+%Y-%m-%d")
 DRONE_VERSION_LINE := version: $(DRONE_TAG), build date: $(DRONE_BUILD_DATE), commit ID: $(DRONE_COMMIT_ID)
 GOLANG_VERSION="1.20.5-buster"
 
-all: package
+all: build
 
-package:
+build:
 	wget -O- https://raw.githubusercontent.com/rcmd-funkhaus/debrewery/master/debrew.sh | bash -
 
 dafuq: Makefile Dockerfile main.go
