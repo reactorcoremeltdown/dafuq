@@ -160,3 +160,4 @@ The Makefile here is for continuous integration.
 I have no plans for further development of `dafuq`, except of fixing possible bugs and doing occasional maintenance releases. If you have any concerns, please let me know in the issues!
 
 DAFUQ is licensed under GPL version 3, so please contribute back your changes ;)
+
