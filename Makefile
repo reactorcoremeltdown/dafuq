@@ -24,6 +24,7 @@ dafuq: Makefile main.go
 	$(GOC)
 
 install:
+	pwd && ls -la
 	mkdir -p $(BINDIR)
 	$(INSTALL_BIN) dafuq $(BINDIR)/
 
