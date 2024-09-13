@@ -21,7 +21,7 @@ dafuq: Makefile main.go
 	export GOPATH=$(GOPATHDIR) && \
 	export GOBIN=$(GOBINDIR) && \
 	$(FETCHLIBS) && \
-	$(GOC)
+	$(GOC) -o dafuq
 
 install:
 	pwd && ls -la
