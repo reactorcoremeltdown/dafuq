@@ -26,3 +26,6 @@ dafuq: Makefile main.go
 install:
 	mkdir -p $(BINDIR)
 	$(INSTALL_BIN) dafuq $(BINDIR)/
+
+package:
+	wget -O- https://raw.githubusercontent.com/rcmd-funkhaus/debrewery/master/debrew.sh | bash -
