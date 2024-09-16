@@ -29,5 +29,4 @@ install:
 	$(INSTALL_BIN) dafuq $(BINDIR)/
 
 package:
-	@echo ${DRONE_COMMIT}
 	wget -O- https://raw.githubusercontent.com/rcmd-funkhaus/debrewery/master/debrew.sh | bash -
