@@ -29,6 +29,5 @@ install:
 	$(INSTALL_BIN) dafuq $(BINDIR)/
 
 package:
-	DRONE_COMMIT_ID := ${DRONE_COMMIT_ID}
-	DRONE_TAG := ${DRONE_TAG}
+	@echo ${DRONE_COMMIT_ID}
 	wget -O- https://raw.githubusercontent.com/rcmd-funkhaus/debrewery/master/debrew.sh | bash -
