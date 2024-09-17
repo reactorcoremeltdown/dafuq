@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-echo ${MESSAGE} ${STATUS} ${NAME} ${DESCRIPTION} >> /tmp/monitoring.log

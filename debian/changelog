@@ -1,4 +1,10 @@
-dafuq (0.9.5-4) UNRELEASED; urgency=medium
+dafuq (0.9.5-5) UNRELEASED; urgency=medium
+
+  * Restructured source directory
+
+ -- Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>  Tue, 17 Sep 2024 14:36:44 +0000
+
+dafuq (0.9.5-4) unstable; urgency=medium
 
   * Debug revision
 
