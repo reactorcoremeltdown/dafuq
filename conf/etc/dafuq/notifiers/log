@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo ${MESSAGE} ${STATUS} ${NAME} ${DESCRIPTION} >> /var/log/dafuq/monitoring.log
