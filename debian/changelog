@@ -1,4 +1,10 @@
-dafuq (0.9.5-2) UNRELEASED; urgency=medium
+dafuq (0.9.5-3) UNRELEASED; urgency=medium
+
+  * Finalized stable build with separate upload folders
+
+ -- Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>  Tue, 17 Sep 2024 11:17:01 +0000
+
+dafuq (0.9.5-2) unstable; urgency=medium
 
   * Initial stable build for all platforms
 
