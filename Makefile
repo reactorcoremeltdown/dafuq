@@ -38,7 +38,7 @@ install:
 	$(INSTALL_CONF) $(CONFSRCDIR)/dafuq.ini $(CONFDIR)/
 	$(INSTALL_CONF) $(CONFSRCDIR)/configs/checkfile.ini $(CONFDIR)/configs/
 	$(INSTALL_BIN) $(CONFSRCDIR)/notifiers/log $(CONFDIR)/notifiers
-	$(INSTALL_BIN) $(CONFSRCDIR)plugins/* $(CONFDIR)/plugins/
+	$(INSTALL_BIN) $(CONFSRCDIR)/plugins/* $(CONFDIR)/plugins/
 	mkdir -p $(SYSTEMLOGDIR)
 
 package:
