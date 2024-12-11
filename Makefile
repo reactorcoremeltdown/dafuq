@@ -21,7 +21,7 @@ SYSTEMLOGDIR?=$(DESTDIR)/var/log/dafuq
 
 all: dafuq
 
-dafuq: Makefile main.go
+dafuq: Makefile src/main.go
 	mkdir -p $(GOPATHDIR) && \
 	mkdir -p $(GOBINDIR) && \
 	export GOPATH=$(GOPATHDIR) && \
