@@ -13,5 +13,4 @@ Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
 Built-Using: ${misc:Built-Using}
-X-Debrew-Debug-Sleep: 300
 Description: Drastically simple monitoring tool, a Nagios microkernel
