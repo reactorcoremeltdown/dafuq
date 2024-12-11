@@ -16,7 +16,7 @@ steps:
   - git clone $DRONE_GIT_SSH_URL
 - name: build
   commands:
-  - cd $DRONE_REPO_NAME && echo $GIT_SUDO | sudo -S make DRONE_TAG=$DRONE_TAG package && ls -l build
+  - cd $DRONE_REPO_NAME && echo $GIT_SUDO | sudo -S make DRONE_TAG=$DRONE_TAG package && ls -l
   environment:
     DRONE_BRANCH: $DRONE_BRANCH
     GIT_SUDO:
