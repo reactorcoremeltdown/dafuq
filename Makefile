@@ -6,7 +6,7 @@ GOBINDIR=$(BUILDDIR)/bin
 GOPATHDIR=$(BUILDDIR)/golibs
 
 SRCDIR=$(CURDIR)/src/dafuq
-CONFSRCDIR=$(CURDIR)/conf/etc/dafuq
+CONFSRCDIR=$(CURDIR)/src/conf/etc/dafuq
 
 INSTALL=install
 INSTALL_BIN=$(INSTALL) -m755
@@ -36,7 +36,7 @@ install:
 	$(INSTALL_BIN) $(SRCDIR)/dafuq $(BINDIR)/
 	mkdir -p $(CONFDIR)/configs $(CONFDIR)/notifiers $(CONFDIR)/plugins
 	$(INSTALL_CONF) $(CONFSRCDIR)/dafuq.ini $(CONFDIR)/
-	$(INSTALL_CONF) $(CONFSRCDIR)configs/checkfile.ini $(CONFDIR)/configs/
+	$(INSTALL_CONF) $(CONFSRCDIR)/configs/checkfile.ini $(CONFDIR)/configs/
 	$(INSTALL_BIN) $(CONFSRCDIR)/notifiers/log $(CONFDIR)/notifiers
 	$(INSTALL_BIN) $(CONFSRCDIR)plugins/* $(CONFDIR)/plugins/
 	mkdir -p $(SYSTEMLOGDIR)
