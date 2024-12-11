@@ -1,5 +1,5 @@
 GOC := /usr/bin/go build
-FETCHLIBS=/usr/bin/go get
+FETCHLIBS=/usr/bin/go get -v
 
 BUILDDIR=$(CURDIR)/build
 GOBINDIR=$(BUILDDIR)/bin
@@ -26,7 +26,7 @@ dafuq: Makefile src/dafuq/main.go
 	mkdir -p $(GOBINDIR) && \
 	export GOPATH=$(GOPATHDIR) && \
 	export GOBIN=$(GOBINDIR) && \
-	cd $(SRCDIR) \
+	cd $(SRCDIR) && \
 	$(FETCHLIBS) && \
 	$(GOC) -o dafuq
 
