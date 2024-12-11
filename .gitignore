@@ -19,5 +19,5 @@ tags
 # Persistent undo
 [._]*.un~
 
-# Build filea
-src/dafuq
+# Build files
+src/dafuq/dafuq

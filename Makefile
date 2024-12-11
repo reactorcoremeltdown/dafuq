@@ -5,7 +5,7 @@ BUILDDIR=$(CURDIR)/build
 GOBINDIR=$(BUILDDIR)/bin
 GOPATHDIR=$(BUILDDIR)/golibs
 
-SRCDIR=$(CURDIR)/src
+SRCDIR=$(CURDIR)/src/dafuq
 CONFSRCDIR=$(CURDIR)/conf/etc/dafuq
 
 INSTALL=install
@@ -21,7 +21,7 @@ SYSTEMLOGDIR?=$(DESTDIR)/var/log/dafuq
 
 all: dafuq
 
-dafuq: Makefile src/main.go
+dafuq: Makefile src/dafuq/main.go
 	mkdir -p $(GOPATHDIR) && \
 	mkdir -p $(GOBINDIR) && \
 	export GOPATH=$(GOPATHDIR) && \
