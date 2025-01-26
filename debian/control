@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>
 Build-Depends: dh-golang,
                golang-any,
+               debhelper
 Standards-Version: 4.6.0
 Homepage: https://github.com/reactorcoremeltdown/dafuq
 Rules-Requires-Root: no
