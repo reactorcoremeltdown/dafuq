@@ -14,3 +14,4 @@ Depends: ${misc:Depends},
          ${shlibs:Depends},
 Built-Using: ${misc:Built-Using}
 Description: Drastically simple monitoring tool, a Nagios microkernel
+    A blackbox monitoring tool built on top of Nagios idea. Batteries included.
