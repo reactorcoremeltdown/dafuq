@@ -97,7 +97,7 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 					for index, check := range configArray {
 						if check.Name == checkName {
 							notFound = false
-							configArray[index].DowntimeCounter = DowntimeCounter
+							configArray[index].DowntimeCounter = downtimeCounter
 							fmt.Fprint(res, "OK\n")
 						}
 					}
