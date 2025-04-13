@@ -28,6 +28,7 @@ type config struct {
 	SuppressedBy      []string
 	Output            string
 	Counter           int
+	DowntimeCounter   int
 	Status            int
 	CurrentStatus     int
 	WarningThreshold  string
@@ -64,6 +65,7 @@ func getCheck(name string) (config, error) {
 func encodeConfig(res http.ResponseWriter, req *http.Request) {
 	checkName := req.URL.Query().Get("check")
 	counter := req.URL.Query().Get("counter")
+	downtime := req.URL.Query().Get("downtime")
 	notFound := true
 	if checkName != "" {
 		if req.Method == http.MethodPost {
@@ -85,9 +87,28 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 						fmt.Fprint(res, "Check not found\n")
 					}
 				}
+			} else if downtime != "" {
+				downtimeValue, err := time.ParseDuration(downtime)
+				if err != nil {
+					res.WriteHeader(400)
+					fmt.Fprint(res, "Failed to parse downtime duration\n")
+				} else {
+					downtimeCounter := int(downtimeValue.Seconds())
+					for index, check := range configArray {
+						if check.Name == checkName {
+							notFound = false
+							configArray[index].DowntimeCounter = DowntimeCounter
+							fmt.Fprint(res, "OK\n")
+						}
+					}
+					if notFound {
+						res.WriteHeader(404)
+						fmt.Fprint(res, "Check not found\n")
+					}
+				}
 			} else {
 				res.WriteHeader(400)
-				fmt.Fprint(res, "POST requests are only for setting check counters\n")
+				fmt.Fprint(res, "POST requests are only for setting check counters and downtime intervals\n")
 			}
 		} else {
 			/*
@@ -140,6 +161,7 @@ func loadState(loaded []config) {
 		for _, key_loaded := range loaded {
 			if configArray[index].Name == key_loaded.Name {
 				configArray[index].Counter = key_loaded.Counter
+				configArray[index].DowntimeCounter = key_loaded.DowntimeCounter
 				configArray[index].Status = key_loaded.Status
 				configArray[index].CurrentStatus = key_loaded.CurrentStatus
 				configArray[index].Output = key_loaded.Output
@@ -220,6 +242,7 @@ func main() {
 		container.SuppressedBy = configIni.Section("config").Key("suppressedBy").ValueWithShadows()
 		container.Output = "Waiting for output"
 		container.Counter = 0
+		container.DowntimeCounter = 0
 		container.Status = 0
 		container.CurrentStatus = 0
 
@@ -263,6 +286,10 @@ func main() {
 	for {
 		for index, _ := range configArray {
 			configArray[index].Counter = configArray[index].Counter + 1
+			configArray[index].DowntimeCounter = configArray[index].DowntimeCounter - 1
+			if configArray[index].DowntimeCounter < 0 {
+				configArray[index].DowntimeCounter = 0
+			}
 			if configArray[index].Counter >= configArray[index].Interval {
 				go func(i int) {
 					log.Println("Running check: " + configArray[i].Name)
@@ -321,7 +348,7 @@ func main() {
 							}
 						}
 
-						if suppressStatus == 0 {
+						if suppressStatus == 0 || configArray[i].DowntimeCounter != 0 {
 							for _, item := range configArray[i].Notify {
 								ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
 								alert := exec.CommandContext(ctx, "/bin/sh", "-c", notifiersDir+"/"+item)

@@ -1,4 +1,10 @@
-dafuq (0.9.5-7) UNRELEASED; urgency=medium
+dafuq (0.10.0-1) UNRELEASED; urgency=medium
+
+  * Added the ability to set downtime intervals through post requests
+
+ -- Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>  Sun, 13 Apr 2025 11:40:41 +0200
+
+dafuq (0.9.5-7) unstable; urgency=medium
 
   * Added debhelper to build dependencies
 
