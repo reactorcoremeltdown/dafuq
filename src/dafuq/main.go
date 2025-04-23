@@ -69,7 +69,7 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 	downtime := req.URL.Query().Get("downtime")
 	notFound := true
 	if debug {
-		fmt.Pritnf("[DEBUG] check: %s, counter: %s, downtime: %s\n", checkName, counter, downtime)
+		fmt.Printf("[DEBUG] check: %s, counter: %s, downtime: %s\n", checkName, counter, downtime)
 	}
 	if checkName != "" {
 		if req.Method == http.MethodPost {
