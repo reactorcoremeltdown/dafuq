@@ -39,6 +39,7 @@ type config struct {
 
 var configArray []config
 var Version, CommitID, BuildDate string
+var debug bool
 
 func logErr(desc string, e error) {
 	if e != nil {
@@ -67,6 +68,9 @@ func encodeConfig(res http.ResponseWriter, req *http.Request) {
 	counter := req.URL.Query().Get("counter")
 	downtime := req.URL.Query().Get("downtime")
 	notFound := true
+	if debug {
+		fmt.Pritnf("[DEBUG] check: %s, counter: %s, downtime: %s\n", checkName, counter, downtime)
+	}
 	if checkName != "" {
 		if req.Method == http.MethodPost {
 			if counter != "" {
@@ -194,6 +198,7 @@ func main() {
 	execTimeoutSec := cfg.Section("main").Key("execTimeoutSec").MustInt(10) // Defaulting to 10 seconds timeout for executing scripts
 	jsonStatusPath := cfg.Section("main").Key("jsonStatusPath").MustString("/")
 	address := cfg.Section("main").Key("address").String()
+	debug = cfg.Section("main").Key("debug").MustBool(false)
 	port := cfg.Section("main").Key("port").String()
 
 	configFiles, err := ioutil.ReadDir(configsDir + "/")
