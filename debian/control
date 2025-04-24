@@ -8,6 +8,9 @@ Build-Depends: dh-golang,
 Standards-Version: 4.6.0
 Homepage: https://github.com/reactorcoremeltdown/dafuq
 Rules-Requires-Root: no
+X-Debrew-Production-Flavours: ["bookworm"]
+X-Debrew-Production-Architectures: ["amd64","arm64","armhf"]
+
 
 Package: dafuq
 Architecture: any
