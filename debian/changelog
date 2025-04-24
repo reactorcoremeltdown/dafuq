@@ -1,4 +1,10 @@
-dafuq (0.10.0-3) UNRELEASED; urgency=medium
+dafuq (0.10.0-4) UNRELEASED; urgency=medium
+
+  * Fixed wrong combining operator for conditional for notification suppressing
+
+ -- Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>  Thu, 24 Apr 2025 12:18:58 +0200
+
+dafuq (0.10.0-3) unstable; urgency=medium
 
   * Fixed wrong conditional for notification suppressing
 

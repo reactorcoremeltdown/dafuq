@@ -353,7 +353,7 @@ func main() {
 							}
 						}
 
-						if suppressStatus == 0 || configArray[i].DowntimeCounter == 0 {
+						if suppressStatus == 0 && configArray[i].DowntimeCounter == 0 {
 							for _, item := range configArray[i].Notify {
 								ctx, cancel := context.WithTimeout(context.Background(), time.Duration(execTimeoutSec)*time.Second)
 								alert := exec.CommandContext(ctx, "/bin/sh", "-c", notifiersDir+"/"+item)
