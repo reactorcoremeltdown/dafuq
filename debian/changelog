@@ -1,4 +1,10 @@
-dafuq (0.10.0-2) UNRELEASED; urgency=medium
+dafuq (0.10.0-3) UNRELEASED; urgency=medium
+
+  * Fixed wrong conditional for notification suppressing
+
+ -- Azer Abdullaev <azer.abdullaev.berlin+git@gmail.com>  Thu, 24 Apr 2025 12:13:20 +0200
+
+dafuq (0.10.0-2) unstable; urgency=medium
 
   * Added debug flags
 
